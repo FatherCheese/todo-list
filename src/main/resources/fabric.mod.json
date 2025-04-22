@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "todo",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This mod aims to help new BTA modders.",
+  "name": "Simple Todo List",
+  "description": "A simple todo list GUI for BTA!",
   "authors": [
-    "Turnip Labs"
+    "Cookie Cakes"
   ],
   "contact": {
-    "homepage": "",
-    "sources": ""
+    "sources": "https://github.com/FatherCheese/todo-list",
+		"issues": "https://github.com/FatherCheese/todo-list/issues"
   },
 
 	"icon": "icon.png",
@@ -18,21 +18,18 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-			"turniplabs.examplemod.ExampleMod"
-    ],
-		"beforeGameStart": [
-			"turniplabs.examplemod.ExampleMod"
+		"client": [
+			"cookie.todo.TodoClient"
 		],
-		"afterGameStart": [
-			"turniplabs.examplemod.ExampleMod"
+		"beforeClientStart": [
+			"cookie.todo.TodoClient"
 		],
-		"recipesReady": [
-			"turniplabs.examplemod.ExampleMod"
+		"afterClientStart": [
+			"cookie.todo.TodoClient"
 		]
 	},
   "mixins": [
-      "examplemod.mixins.json"
+		"todo.mixins.json"
   ],
 
   "depends": {
