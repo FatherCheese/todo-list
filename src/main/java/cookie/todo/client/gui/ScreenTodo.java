@@ -73,10 +73,10 @@ public class ScreenTodo extends Screen {
 		drawTexturedModalRect(x + 128, y + 128, 224, 0, 16, 16);
 
 		// Page Text
-		font.drawStringWithShadow("Page " + currentPage.id, x + 70, y + 130, -1);
+		font.drawString("Page " + currentPage.id, x + 70, y + 135, 0x5f5342);
 
 		for (int loop = 0; loop < 6; loop++) {
-			font.drawString(currentPage.getLine(loop), x + 34, y + 22 + (18 * loop), 0x99876c);
+			font.drawString(currentPage.getLine(loop), x + 34, y + 22 + (18 * loop), 0x5f5342);
 		}
 
 		if (textField.isFocused) {

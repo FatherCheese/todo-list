@@ -54,7 +54,7 @@ public class TodoClient implements ClientModInitializer, ClientStartEntrypoint {
 	public void afterClientStart() {
 		GameSettings.keys.add(keyTodoList);
 		OptionsPages.CONTROLS
-			.withComponent(new OptionsCategory("todo.gui.options.page.controls.category.todo")
+			.withComponent(new OptionsCategory("todo.options.category.todo")
 				.withComponent(new KeyBindingComponent(keyTodoList)));
 	}
 
