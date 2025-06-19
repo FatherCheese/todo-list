@@ -9,8 +9,9 @@ import net.minecraft.client.gui.TextFieldElement;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import java.io.IOException;
-
+/**
+ * A class to handle the List screen.
+ */
 @Environment(EnvType.CLIENT)
 public class ScreenTodo extends Screen {
 	int xSize = 176;
@@ -19,13 +20,12 @@ public class ScreenTodo extends Screen {
 	private Page currentPage;
 	private int selectedList;
 
+	/**
+	 * The screen initializer.
+	 */
 	@Override
 	public void init() {
-		try {
-			TodoClient.read();
-		} catch (IOException e) {
-			TodoClient.LOGGER.error("Error reading todo.dat for the current world or server!");
-		}
+		TodoClient.read();
 
 		Keyboard.enableRepeatEvents(true);
 		buttons.clear();
@@ -35,6 +35,12 @@ public class ScreenTodo extends Screen {
 		selectedList = 0;
 	}
 
+	/**
+	 * A method to render textures.
+	 * @param mx MouseX
+	 * @param my MouseY
+	 * @param partialTick Partial Tick
+	 */
 	@Override
 	public void render(int mx, int my, float partialTick) {
 		int x = (width - xSize) / 2;
@@ -49,24 +55,13 @@ public class ScreenTodo extends Screen {
 		for (int check = 0; check < 6; check++) {
 			drawTexturedModalRect(x + 16, y + 16 + (18 * check), 176, 0, 16, 16);
 		}
-		if (currentPage.isFirstChecked()) {
-			drawTexturedModalRect(x + 16, y + 16, 192, 0, 16, 16);
-		}
-		if (currentPage.isSecondChecked()) {
-			drawTexturedModalRect(x + 16, y + 34, 192, 0, 16, 16);
-		}
-		if (currentPage.isThirdChecked()) {
-			drawTexturedModalRect(x + 16, y + 52, 192, 0, 16, 16);
-		}
-		if (currentPage.isFourthChecked()) {
-			drawTexturedModalRect(x + 16, y + 70, 192, 0, 16, 16);
-		}
-		if (currentPage.isFifthChecked()) {
-			drawTexturedModalRect(x + 16, y + 88, 192, 0, 16, 16);
-		}
-		if (currentPage.isSixthChecked()) {
-			drawTexturedModalRect(x + 16, y + 106, 192, 0, 16, 16);
-		}
+
+		if (currentPage.isFirstChecked()) drawTexturedModalRect(x + 16, y + 16, 192, 0, 16, 16);
+		if (currentPage.isSecondChecked()) drawTexturedModalRect(x + 16, y + 34, 192, 0, 16, 16);
+		if (currentPage.isThirdChecked()) drawTexturedModalRect(x + 16, y + 52, 192, 0, 16, 16);
+		if (currentPage.isFourthChecked()) drawTexturedModalRect(x + 16, y + 70, 192, 0, 16, 16);
+		if (currentPage.isFifthChecked()) drawTexturedModalRect(x + 16, y + 88, 192, 0, 16, 16);
+		if (currentPage.isSixthChecked()) drawTexturedModalRect(x + 16, y + 106, 192, 0, 16, 16);
 
 		// Page Buttons
 		drawTexturedModalRect(x + 32, y + 128, 208, 0, 16, 16);
@@ -84,42 +79,53 @@ public class ScreenTodo extends Screen {
 		}
 	}
 
+	/**
+	 * A method handling where the mouse was clicked.
+	 * @param mx MouseX
+	 * @param my MouseY
+	 * @param buttonNum Mouse Button
+	 */
 	@Override
 	public void mouseClicked(int mx, int my, int buttonNum) {
-		if (!textField.isFocused) {
-			super.mouseClicked(mx, my, buttonNum);
-			int x = (width - xSize) / 2;
-			int y = (height - ySize) / 2;
+		if (textField.isFocused) return;
 
-			for (int i = 0; i < 6; i++) {
-				if (mx >= x + 32 && mx < x + 160) {
-					if (my >= y + 16 + (18 * i) && my < y + 32 + (18 * i)) {
-						textField.setFocused(true);
-					}
+		super.mouseClicked(mx, my, buttonNum);
+		int x = (width - xSize) / 2;
+		int y = (height - ySize) / 2;
+
+		for (int i = 0; i < 6; i++) {
+			if (mx >= x + 32 && mx < x + 160) {
+				if (my >= y + 16 + (18 * i) && my < y + 32 + (18 * i)) {
+					textField.setFocused(true);
 				}
 			}
+		}
 
-			mouseClickedSlot(mx, my);
-			mouseClickedBox(mx, my);
+		mouseClickedSlot(mx, my);
+		mouseClickedBox(mx, my);
 
-			// Page Back
-			if (mx >= x + 32 && mx < x + 48) {
-				if (my >= y + 128 && my < y + 144) {
-					if (currentPage.id - 1 >= 0) {
-						currentPage = TodoClient.getPage(currentPage.id - 1);
-					}
+		// Page Back
+		if (mx >= x + 32 && mx < x + 48) {
+			if (my >= y + 128 && my < y + 144) {
+				if (currentPage.id - 1 >= 0) {
+					currentPage = TodoClient.getPage(currentPage.id - 1);
 				}
 			}
+		}
 
-			// Page forward
-			if (mx >= x + 128 && mx < x + 144) {
-				if (my >= y + 128 && my < y + 144) {
-					currentPage = TodoClient.getPage(currentPage.id + 1);
-				}
+		// Page forward
+		if (mx >= x + 128 && mx < x + 144) {
+			if (my >= y + 128 && my < y + 144) {
+				currentPage = TodoClient.getPage(currentPage.id + 1);
 			}
 		}
 	}
 
+	/**
+	 * A method to handle if the mouse was clicked in a checkbox.
+	 * @param mx MouseX
+	 * @param my MouseY
+	 */
 	private void mouseClickedBox(int mx, int my) {
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
@@ -171,6 +177,11 @@ public class ScreenTodo extends Screen {
 		}
 	}
 
+	/**
+	 * A button to check if the mouse was clicked in a slot.
+	 * @param mx MouseX
+	 * @param my MouseY
+	 */
 	private void mouseClickedSlot(int mx, int my) {
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
@@ -192,18 +203,36 @@ public class ScreenTodo extends Screen {
 		}
 	}
 
+	/**
+	 * A method to check if the screen should pause the game.
+	 * @return Returns false
+	 */
 	@Override
 	public boolean isPauseScreen() {
 		return false;
 	}
 
+	/**
+	 * A method to handle key presses.
+	 * @param eventCharacter Unknown
+	 * @param eventKey The key pressed
+	 * @param mx MouseX
+	 * @param my MouseY
+	 */
 	@Override
 	public void keyPressed(char eventCharacter, int eventKey, int mx, int my) {
-		if (textField.isFocused) {
+		// First, we check if the text field IS NOT focused.
+		// If not, we return the super method. Otherwise,
+		// We type in the text field UNLESS the key is
+		// return (enter) or escape.
+		if (!textField.isFocused) super.keyPressed(eventCharacter, eventKey, mx, my);
+		else {
 			textField.textboxKeyTyped(eventCharacter, eventKey);
 
+			if (!textField.getText().trim().isEmpty()) currentPage.setLine(selectedList, textField.getText());
+
 			if(eventKey == Keyboard.KEY_RETURN) {
-				currentPage.setLine(selectedList, textField.getText());
+				if (!textField.getText().trim().isEmpty()) currentPage.setLine(selectedList, textField.getText());
 				textField.setFocused(false);
 				textField.setText("");
 			}
@@ -212,20 +241,15 @@ public class ScreenTodo extends Screen {
 				textField.setFocused(false);
 				textField.setText("");
 			}
-		} else {
-			super.keyPressed(eventCharacter, eventKey, mx, my);
 		}
 	}
 
+	/**
+	 * A method handling the screen closing.
+	 */
 	@Override
 	public void removed() {
-		try {
-			TodoClient.write();
-		} catch (IOException e) {
-			TodoClient.LOGGER.error("Error writing todo.dat for the current world or server!");
-			TodoClient.LOGGER.error(e.getLocalizedMessage(), e);
-		}
-
+		TodoClient.write();
 		TodoClient.pages.clear();
 		Keyboard.enableRepeatEvents(false);
 	}
